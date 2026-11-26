@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Manager\DashboardController as ManagerDashboardController;
+use App\Http\Controllers\Hairdresser\DashboardController as HairdresserDashboardController;
+use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -12,38 +15,36 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// partie au manager
+// Espace Manager
 Route::middleware(['auth', 'role:manager'])
     ->prefix('manager')
     ->group(function () {
-        Route::get('/', function () {
-            return 'Bienvenue dans l’espace Manager';
-        })->name('manager.dashboard');
+        Route::get('/', [ManagerDashboardController::class, 'index'])
+            ->name('manager.dashboard');
     });
 
-// partie coiffeur
+// Espace Coiffeur
 Route::middleware(['auth', 'role:hairdresser'])
-    ->prefix('hairdresser')
+    ->prefix('coiffeur')
     ->group(function () {
-        Route::get('/', function () {
-            return 'Bienvenue dans l’espace Coiffeur';
-        })->name('hairdresser.dashboard');
+        Route::get('/', [HairdresserDashboardController::class, 'index'])
+            ->name('hairdresser.dashboard');
     });
 
-// partie client
+// Espace Client
 Route::middleware(['auth', 'role:customer'])
-    ->prefix('customer')
+    ->prefix('client')
     ->group(function () {
-        Route::get('/', function () {
-            return 'Bienvenue dans l’espace Client';
-        })->name('customer.dashboard');
+        Route::get('/', [CustomerDashboardController::class, 'index'])
+            ->name('customer.dashboard');
     });
+    
 
-// partie  du profil
+// espace  du profil
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profil', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profil', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profil', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 require __DIR__.'/auth.php';

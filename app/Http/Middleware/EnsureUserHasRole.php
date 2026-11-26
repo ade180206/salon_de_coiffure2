@@ -20,8 +20,8 @@ class EnsureUserHasRole
 
         $expectedRole = UserRole::tryFrom($role);
 
-        if (!$user || !$expectedRole || $user->Role !== $expectedRole) {
-            abort(403, 'Accès interdit à l\'utilisateur.');
+        if (!$user || !$expectedRole || $user->role !== $expectedRole) {
+            abort(403, 'Accès interdit.');
         }
 
         return $next($request);
